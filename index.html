@@ -1,5 +1,4 @@
 <!doctype html>
-
 <html lang="th">
 <head>
   <meta charset="utf-8" />
@@ -7,19 +6,27 @@
   <title>เสนอราคาผ่อนสินค้า แบบผ่อนรวม</title>
   <style>
     :root{--bg:#0f1724;--card:#08121a;--accent:#0ea5a4;--muted:#9fb3c8;--glass:rgba(255,255,255,0.03)}
-    html,body{height:100%;margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,'Helvetica Neue',Arial; background:linear-gradient(180deg,#020617,var(--bg));color:#e6eef8}
+    html,body{height:100%;margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,'Helvetica Neue',Arial;
+      background:linear-gradient(180deg,#020617,var(--bg));color:#e6eef8}
     .wrap{max-width:780px;margin:14px auto;padding:14px}
     h1{font-size:18px;margin:0 0 6px}
     p.lead{margin:0 0 12px;color:var(--muted);font-size:13px}
     .card{background:var(--card);border-radius:12px;padding:12px;box-shadow:0 6px 18px rgba(0,0,0,0.6)}
     label{display:block;font-size:12px;margin-bottom:6px;color:var(--muted)}
-    input[type="text"], input[type="number"], select{width:100%;padding:12px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:var(--glass);color:inherit;font-size:15px}
+    input[type="text"], input[type="number"], select{
+      width:100%;padding:12px;border-radius:8px;
+      border:1px solid rgba(255,255,255,0.04);background:var(--glass);
+      color:inherit;font-size:15px
+    }
     .row{display:flex;gap:10px}
     .col{flex:1}
     .actions{display:flex;gap:10px;margin-top:12px}
-    button{flex:1;padding:12px;border-radius:10px;border:0;background:linear-gradient(90deg,var(--accent),#34d399);color:#042018;font-weight:700}
+    button{flex:1;padding:12px;border-radius:10px;border:0;
+      background:linear-gradient(90deg,var(--accent),#34d399);
+      color:#042018;font-weight:700}
     .mutebtn{background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--muted)}
-    .result{margin-top:12px;padding:12px;border-radius:10px;background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));}
+    .result{margin-top:12px;padding:12px;border-radius:10px;
+      background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));}
     .result-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px dashed rgba(255,255,255,0.02)}
     .result-row:last-child{border-bottom:0}
     .big{font-size:16px;font-weight:700}
@@ -32,122 +39,122 @@
 </head>
 <body>
   <div class="wrap">
-    <h1>เสนอราคาผ่อนสินค้า แบบผ่อนรวม</h1></p><div class="card">
-  <label>1. Product / สินค้ารุ่น</label>
-  <input id="product" type="text" placeholder="เช่น iPhone 17 128GB / Samsung A..." />
+    <h1>เสนอราคาผ่อนสินค้า แบบผ่อนรวม</h1>
+    <div class="card">
 
-  <div style="height:8px"></div>
-  <div class="row">
-    <div class="col">
-      <label>2. ราคาสินค้าจริง</label>
-      <input id="basePrice" type="number" min="0" step="1" value="25000" />
+      <label>1. Product / สินค้ารุ่น</label>
+      <input id="product" type="text" placeholder="เช่น iPhone 17 128GB / Samsung A..." />
+
+      <div style="height:8px"></div>
+      <div class="row">
+        <div class="col">
+          <label>2. ราคาสินค้าจริง</label>
+          <input id="basePrice" type="number" min="0" step="1" value="25000" />
+        </div>
+        <div class="col">
+          <label>กำไร (%)</label>
+          <select id="profitRate">
+            <option value="10">10%</option>
+            <option value="15" selected>15%</option>
+            <option value="20">20%</option>
+            <option value="25">25%</option>
+            <option value="30">30%</option>
+          </select>
+        </div>
+      </div>
+
+      <div style="height:8px"></div>
+      <div class="row">
+        <div class="col">
+          <label>3. Initial payment (ชำระครั้งแรกรับเครื่อง)</label>
+          <input id="firstPay" type="number" min="0" step="1" value="9000" />
+        </div>
+        <div class="col">
+          <label>4. Term — จำนวนเดือน</label>
+          <input id="months" type="number" min="1" step="1" value="6" />
+        </div>
+      </div>
+
+      <div class="actions">
+        <button id="calcBtn">Calculate — คำนวณ</button>
+        <button id="copyBtn" class="mutebtn">คัดลอกเสนอลูกค้า</button>
+      </div>
+
+      <div class="result" id="result">
+        <div class="result-row"><div class="tiny">Product / สินค้า</div><div id="rProduct" class="big">-</div></div>
+        <div class="result-row"><div class="tiny">Total installment price (ยอดผ่อนรวม)</div><div id="rTotal" class="big">-</div></div>
+        <div class="result-row"><div class="tiny">ชำระครั้งแรก</div><div id="rFirst" class="big">-</div></div>
+        <div class="result-row"><div class="tiny">Remaining principal (ยอดที่นำไปคิดดอกเบี้ย)</div><div id="rRemain" class="big">-</div></div>
+        <div class="result-row"><div class="tiny">Term (จำนวนเดือน)</div><div id="rMonths" class="big">-</div></div>
+        <div class="result-row"><div class="tiny">Monthly installment (งวด/เดือน)</div><div id="rMonthly" class="big">-</div></div>
+      </div>
+
+      <div class="present" id="present">
+        <h3>สรุปสำหรับลูกค้า</h3>
+        <pre id="presentText">-</pre>
+      </div>
+
     </div>
-    <div class="col">
-      <label>กำไร (%)</label>
-      <select id="profitRate">
-        <option value="10">10%</option>
-        <option value="15" selected>15%</option>
-        <option value="20">20%</option>
-        <option value="25">25%</option>
-        <option value="30">30%</option>
-      </select>
-    </div>
   </div>
 
-  <div style="height:8px"></div>
-  <div class="row">
-    <div class="col">
-      <label>3. Initial payment (ชำระครั้งแรกรับเครื่อง)</label>
-      <input id="firstPay" type="number" min="0" step="1" value="9000" />
-    </div>
-    <div class="col">
-      <label>4. Term — จำนวนเดือน</label>
-      <input id="months" type="number" min="1" step="1" value="6" />
-    </div>
-  </div>
-
-  <div class="actions">
-    <button id="calcBtn">Calculate — คำนวณ</button>
-    <button id="copyBtn" class="mutebtn">คัดลอกเสนอลูกค้า</button>
-  </div>
-
-  <div class="result" id="result">
-    <div class="result-row"><div class="tiny">Product / สินค้า</div><div id="rProduct" class="big">-</div></div>
-    <div class="result-row"><div class="tiny">Total installment price (ราคาผ่อนรวม)</div><div id="rTotal" class="big">-</div></div>
-    <div class="result-row"><div class="tiny">ชำระครั้งแรก (ชำระวันรับเครื่อง)</div><div id="rFirst" class="big">-</div></div>
-    <div class="result-row"><div class="tiny">Remaining principal (ยอดที่ต้องผ่อน)</div><div id="rRemain" class="big">-</div></div>
-    <div class="result-row"><div class="tiny">Term (จำนวนเดือน)</div><div id="rMonths" class="big">-</div></div>
-    <div class="result-row"><div class="tiny">Monthly installment (งวด/เดือน)</div><div id="rMonthly" class="big">-</div></div>
-  </div>
-
-  <div class="present" id="present">
-    <h3>สรุปสำหรับลูกค้า</h3>
-    <pre id="presentText">-</pre>
-  </div>
-</div>
-
-  </div>  <script>
-    function fmt(v){ return new Intl.NumberFormat('th-TH',{style:'currency',currency:'THB',maximumFractionDigits:0}).format(v); }
-
-    const productEl = document.getElementById('product');
-    const basePriceEl = document.getElementById('basePrice');
-    const profitRateEl = document.getElementById('profitRate');
-    const firstPayEl = document.getElementById('firstPay');
-    const monthsEl = document.getElementById('months');
-
-    const rProduct = document.getElementById('rProduct');
-    const rTotal = document.getElementById('rTotal');
-    const rFirst = document.getElementById('rFirst');
-    const rRemain = document.getElementById('rRemain');
-    const rMonths = document.getElementById('rMonths');
-    const rMonthly = document.getElementById('rMonthly');
-    const presentText = document.getElementById('presentText');
+  <script>
+    function fmt(v){
+      return new Intl.NumberFormat('th-TH',{
+        style:'currency',currency:'THB',maximumFractionDigits:0
+      }).format(v);
+    }
 
     function calc(){
-      const product = productEl.value || '-';
-      const basePrice = Number(basePriceEl.value) || 0;
-      const profitRate = Number(profitRateEl.value) / 100;
-      const first = Number(firstPayEl.value) || 0;
-      const months = Math.max(1, Math.floor(Number(monthsEl.value) || 1));
+      const product = document.getElementById('product').value || '-';
+      const basePrice = Number(document.getElementById('basePrice').value) || 0;
+      const profitRate = Number(document.getElementById('profitRate').value) / 100;
+      const first = Number(document.getElementById('firstPay').value) || 0;
+      const months = Math.max(1, Math.floor(Number(document.getElementById('months').value) || 1));
 
-      const total = Math.round(basePrice * (1 + profitRate));
-      const remain = Math.max(0, total - first);
-      const monthly = remain / months;
+      // ✔ หักยอดก่อนแล้วค่อยคิดดอกเบี้ย
+      const remainBeforeInterest = Math.max(0, basePrice - first);
+      const interest = Math.round(remainBeforeInterest * profitRate);
+      const total = remainBeforeInterest + interest;
+      const monthly = total / months;
 
-      rProduct.textContent = product;
-      rTotal.textContent = fmt(total);
-      rFirst.textContent = fmt(first);
-      rRemain.textContent = fmt(remain);
-      rMonths.textContent = months + ' เดือน';
-      rMonthly.textContent = fmt(monthly);
+      document.getElementById('rProduct').textContent = product;
+      document.getElementById('rTotal').textContent = fmt(total);
+      document.getElementById('rFirst').textContent = fmt(first);
+      document.getElementById('rRemain').textContent = fmt(remainBeforeInterest);
+      document.getElementById('rMonths').textContent = months + ' เดือน';
+      document.getElementById('rMonthly').textContent = fmt(monthly);
 
       const lines = [];
       lines.push('📋 ใบเสนอราคา');
       lines.push('สินค้า: ' + product);
-      lines.push('ราคาผ่อนรวม: ' + fmt(total));
+      lines.push('ยอดผ่อนรวม: ' + fmt(total));
       lines.push('ชำระครั้งแรก: ' + fmt(first));
-      lines.push('ยอดคงเหลือ: ' + fmt(remain));
+      lines.push('ยอดคงเหลือที่นำไปคิดดอกเบี้ย: ' + fmt(remainBeforeInterest));
       lines.push('จำนวนงวด: ' + months + ' เดือน');
       lines.push('ชำระต่อเดือน: ' + fmt(monthly));
-      presentText.textContent = lines.join('\n');
-      return {product,total,first,remain,months,monthly};
+
+      document.getElementById('presentText').textContent = lines.join('\n');
     }
 
     document.getElementById('calcBtn').addEventListener('click', ()=>{ calc(); navigator.vibrate?.(20); });
 
     document.getElementById('copyBtn').addEventListener('click', async ()=>{
-      const text = presentText.textContent;
+      const text = document.getElementById('presentText').textContent;
       try{
         await navigator.clipboard.writeText(text);
         alert('คัดลอกเสนอลูกค้าแล้ว ✅');
       }catch(e){
-        const ta = document.createElement('textarea'); ta.value = text; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
         alert('คัดลอกสำเร็จ (โหมดสำรอง)');
       }
     });
 
     window.addEventListener('load', ()=>{ calc(); });
-  </script></body>
+  </script>
+</body>
 </html>
-
-
