@@ -6,27 +6,19 @@
   <title>เสนอราคาผ่อนสินค้า แบบผ่อนรวม</title>
   <style>
     :root{--bg:#0f1724;--card:#08121a;--accent:#0ea5a4;--muted:#9fb3c8;--glass:rgba(255,255,255,0.03)}
-    html,body{height:100%;margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,'Helvetica Neue',Arial;
-      background:linear-gradient(180deg,#020617,var(--bg));color:#e6eef8}
+    html,body{height:100%;margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,'Helvetica Neue',Arial; background:linear-gradient(180deg,#020617,var(--bg));color:#e6eef8}
     .wrap{max-width:780px;margin:14px auto;padding:14px}
     h1{font-size:18px;margin:0 0 6px}
     p.lead{margin:0 0 12px;color:var(--muted);font-size:13px}
     .card{background:var(--card);border-radius:12px;padding:12px;box-shadow:0 6px 18px rgba(0,0,0,0.6)}
     label{display:block;font-size:12px;margin-bottom:6px;color:var(--muted)}
-    input[type="text"], input[type="number"], select{
-      width:100%;padding:12px;border-radius:8px;
-      border:1px solid rgba(255,255,255,0.04);background:var(--glass);
-      color:inherit;font-size:15px
-    }
+    input[type="text"], input[type="number"], select{width:100%;padding:12px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:var(--glass);color:inherit;font-size:15px}
     .row{display:flex;gap:10px}
     .col{flex:1}
     .actions{display:flex;gap:10px;margin-top:12px}
-    button{flex:1;padding:12px;border-radius:10px;border:0;
-      background:linear-gradient(90deg,var(--accent),#34d399);
-      color:#042018;font-weight:700}
+    button{flex:1;padding:12px;border-radius:10px;border:0;background:linear-gradient(90deg,var(--accent),#34d399);color:#042018;font-weight:700}
     .mutebtn{background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--muted)}
-    .result{margin-top:12px;padding:12px;border-radius:10px;
-      background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));}
+    .result{margin-top:12px;padding:12px;border-radius:10px;background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));}
     .result-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px dashed rgba(255,255,255,0.02)}
     .result-row:last-child{border-bottom:0}
     .big{font-size:16px;font-weight:700}
@@ -37,9 +29,11 @@
     @media (max-width:420px){.row{flex-direction:column}.actions{flex-direction:column}button{font-size:15px}}
   </style>
 </head>
+
 <body>
   <div class="wrap">
     <h1>เสนอราคาผ่อนสินค้า แบบผ่อนรวม</h1>
+
     <div class="card">
 
       <label>1. Product / สินค้ารุ่น</label>
@@ -82,9 +76,9 @@
 
       <div class="result" id="result">
         <div class="result-row"><div class="tiny">Product / สินค้า</div><div id="rProduct" class="big">-</div></div>
-        <div class="result-row"><div class="tiny">Total installment price (ยอดผ่อนรวม)</div><div id="rTotal" class="big">-</div></div>
-        <div class="result-row"><div class="tiny">ชำระครั้งแรก</div><div id="rFirst" class="big">-</div></div>
-        <div class="result-row"><div class="tiny">Remaining principal (ยอดที่นำไปคิดดอกเบี้ย)</div><div id="rRemain" class="big">-</div></div>
+        <div class="result-row"><div class="tiny">Total installment price (ราคาผ่อนรวม)</div><div id="rTotal" class="big">-</div></div>
+        <div class="result-row"><div class="tiny">ชำระครั้งแรก (ชำระวันรับเครื่อง)</div><div id="rFirst" class="big">-</div></div>
+        <div class="result-row"><div class="tiny">Remaining principal (ยอดที่ต้องผ่อน)</div><div id="rRemain" class="big">-</div></div>
         <div class="result-row"><div class="tiny">Term (จำนวนเดือน)</div><div id="rMonths" class="big">-</div></div>
         <div class="result-row"><div class="tiny">Monthly installment (งวด/เดือน)</div><div id="rMonthly" class="big">-</div></div>
       </div>
@@ -98,9 +92,11 @@
   </div>
 
   <script>
-    function fmt(v){
+    function fmt(v){ 
       return new Intl.NumberFormat('th-TH',{
-        style:'currency',currency:'THB',maximumFractionDigits:0
+        style:'currency',
+        currency:'THB',
+        maximumFractionDigits:0
       }).format(v);
     }
 
@@ -111,27 +107,33 @@
       const first = Number(document.getElementById('firstPay').value) || 0;
       const months = Math.max(1, Math.floor(Number(document.getElementById('months').value) || 1));
 
-      // ✔ หักยอดก่อนแล้วค่อยคิดดอกเบี้ย
-      const remainBeforeInterest = Math.max(0, basePrice - first);
-      const interest = Math.round(remainBeforeInterest * profitRate);
-      const total = remainBeforeInterest + interest;
-      const monthly = total / months;
+      // ✔ สูตรเดิม: ดอกเบี้ยคิดจากราคาเต็ม (ผ่อนรวม)
+      const total = Math.round(basePrice * (1 + profitRate));
+      const remain = Math.max(0, total - first);
+      const monthly = remain / months;
 
       document.getElementById('rProduct').textContent = product;
       document.getElementById('rTotal').textContent = fmt(total);
       document.getElementById('rFirst').textContent = fmt(first);
-      document.getElementById('rRemain').textContent = fmt(remainBeforeInterest);
+      document.getElementById('rRemain').textContent = fmt(remain);
       document.getElementById('rMonths').textContent = months + ' เดือน';
       document.getElementById('rMonthly').textContent = fmt(monthly);
 
+      // ✔ ข้อความใบเสนอราคา (เวอร์ชันใหม่)
       const lines = [];
       lines.push('📋 ใบเสนอราคา');
       lines.push('สินค้า: ' + product);
-      lines.push('ยอดผ่อนรวม: ' + fmt(total));
+      lines.push('ราคาผ่อนสินค้ารวม: ' + fmt(total));
       lines.push('ชำระครั้งแรก: ' + fmt(first));
-      lines.push('ยอดคงเหลือที่นำไปคิดดอกเบี้ย: ' + fmt(remainBeforeInterest));
-      lines.push('จำนวนงวด: ' + months + ' เดือน');
+      lines.push('ยอดผ่อนคงเหลือ: ' + fmt(remain));
+      lines.push('จำนวนงวดที่ชำระ: ' + months + ' เดือน');
       lines.push('ชำระต่อเดือน: ' + fmt(monthly));
+      lines.push('');
+      lines.push('*หมายเหตุ');
+      lines.push('ราคาสินค้าเป็นราคาตายตัว ไม่เปลี่ยนแปลงตามยอดชำระครั้งแรก');
+      lines.push('แต่ยอดชำระครั้งแรกจะมีผลต่อยอดที่ต้องผ่อนชำระต่อเดือนโดยตรง');
+      lines.push('— ชำระครั้งแรกมาก งวดต่อเดือนจะสบายขึ้น');
+      lines.push('— ชำระครั้งแรกน้อย งวดต่อเดือนจะสูงขึ้นตามยอดคงเหลือ');
 
       document.getElementById('presentText').textContent = lines.join('\n');
     }
@@ -156,5 +158,6 @@
 
     window.addEventListener('load', ()=>{ calc(); });
   </script>
+
 </body>
 </html>
